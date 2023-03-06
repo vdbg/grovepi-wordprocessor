@@ -1,0 +1,11 @@
+
+[lcd] # screen configuration
+hello_line = "Ctrl-C=Exit" # first line to display
+delay_msg_seconds = 4      # delay in seconds after displaying a message, for example error msg when saving
+line_len = 16              # shouldn't need to change this: max nb of chars per line
+
+[files]
+save_dir = "/mnt/share/files" # where to save the files
+
+[main]
+log_verbosity = "INFO" # By increasing level of verbosity = FATAL, ERROR, WARNING, INFO, DEBUG.

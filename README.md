@@ -17,32 +17,47 @@ Below is a description of the steps taken to make this project happen.
 
 ## Installation
 
+### Required
+
 * Attach the GrovePi board on the Raspberry Pi and the LCD screen in port I2C-2 on the board
 * Install **buster** on the Raspberry. Not bullseye or later.
   * Bullseye or later will **[not work](https://forum.dexterindustries.com/t/grove-pi-doesnt-work-do-not-use-raspbian-bullseye/8664)** with the GrovePi kit. Wasted a day here.
   * Buster can be downloadesd from [here](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-legacy).
   * The lite version (no desktop) is recommended since the whole point of the wordprocessor is to only display on an LCD screen.
-* Run `sudo raspi-config` to:
-  * Set the pi user to Console AutoLogin using (under System Options, Boot / Auto login)
-  * Optional: setup Wifi. Note the Raspberry Pi Model B doesn't have Wifi natively. Need a USB adapter.
-  * Recommended: enable and test ssh.
+* Run `sudo raspi-config` to set the pi user to Console AutoLogin using (under System Options, Boot / Auto login)
 * Install [GrovePi](https://github.com/DexterInd/GrovePi). The below incantation (that bypasses the UI components) is recommended:
   `curl -kL dexterindustries.com/update_grovepi | bash -s -- --bypass-gui-installation --system-wide`
-* Optional: since the goal is to have the Raspberry Pi headless but also produce some files, you want these to be either accessible or be copied to another machine.
+
+### Optional
+
+* Run `sudo raspi-config` to:
+  * setup Wifi, since the idea is to have something portable. Note the Raspberry Pi Model B doesn't have Wifi natively. Need a USB adapter.
+  * enable and test ssh since we'll be messing up with tty1.
+* Since the goal is to have the Raspberry Pi headless but also produce some files, you want these to be either accessible or be copied to another machine.
   For example, install samba server to have the files accessible from Windows machines or samba client to have the files copied to Windows machines. I went with `sudo apt-get install smbclient`.
-* Optional: setup a Bluetooth keyboard. 
-  * Get a BT adapter (if Raspberry Pi older than model 2)
+* Setup a Bluetooth keyboard, since the idea is to have something portable. 
+  * Get a BT USB adapter (if Raspberry Pi older than model 2)
   * `sudo bluetoothctl`, then scan on, pair, etc.
   * You may need to trust the keyboard after to make sure it auto-connects. `sudo bluetoothctl trust <mac-address>`
-* Download this repo locally, e.g. `git clone git@github.com:vdbg/grovepi-wordprocessor.git`
-* Configure the script; in particular configure where it should save the files. If saving to share, configure it in `/etc/fstab` to automount
+* Set up auto-updates if you want a low-maintenance device: `sudo apt install unattended-upgrades`
+* Update the firmware of the GrovePi board: 
+  `cd ~/Dexter/GrovePi/Firmware &&  sudo bash firmware_update.sh`
+
+## Script setup
+
+* Download this repo locally, e.g. `git clone https://github.com/vdbg/grovepi-wordprocessor.git` and cd inside the directory
+* Run `pip3 install -r requirements.txt`
+* Copy `template.config.toml` to `config.toml`
+* Edit `config.toml` accordingly, in particular configure where the processor should save files
+  If saving to a file share, configure it in `/etc/fstab` to automount, for example
+  `//file/share /mnt/share cifs username=user,password=passwd,auto,user,dir_mode=0777,file_mode=0666,nounix 0 0`
 * Test the script; change paths accordingly if needed:
   `/usr/bin/python3 $HOME/grovepi-wordprocessor/word.py`
 * Edit the `~/.profile` file and add the following lines at the end (with path fixed if appropriate):
 ```
 if [[ "$(tty)" == "/dev/tty1" ]]
 then
-  /usr/bin/python3 $HOME/grovepi-wordprocessor/word.py
+  /usr/bin/python3 $HOME/grovepi-wordprocessor/word.py ; exit
 fi
 ```
 * If logged on the console (physical monitor), press 'Ctrl-D'. This should automatically start the word processor. Now that the default tty1 console is "taken" by the word processor, you have to use CTRL+ALT+Function_Key (F1-F7) to use the other consoles.
