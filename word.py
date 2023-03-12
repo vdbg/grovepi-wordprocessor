@@ -55,10 +55,13 @@ class Processor:
         setText_norefresh(msg)
 
     def set_default_color(self) -> None:
-        setRGB(0, 128, 64)
+        setRGB(0, 128, 64)  # TODO: configure
 
     def set_error_color(self) -> None:
-        setRGB(255, 0, 0)  # RED
+        setRGB(255, 0, 0)  # TODO: configure
+
+    def set_no_color(self) -> None:
+        setRGB(0, 0, 0)
 
     def message_and_pause(self, message: str) -> None:
         self.set_text_with_refresh(message)
@@ -84,7 +87,7 @@ class Processor:
     def main(self) -> None:
         try:
             # this sets tty in raw mode, allowing for directly handling keyboard input w/o buffering
-            tty.setcbreak(sys.stdin.fileno())
+            tty.setcbreak(self.stdin_fd)
 
             previous_line: str = self.hello_line
             current_line: str = ""
@@ -116,10 +119,11 @@ class Processor:
             logging.exception(e)
 
         finally:
+            # this restores tty in regular mode
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_tty_settings)
-            setRGB(0, 255, 0)
-            self.message_and_pause("DONE!!")
-            setRGB(0, 0, 0)
+            self.set_default_color()
+            self.message_and_pause("Exiting")
+            self.set_no_color()
 
 
 SUPPORTED_PYTHON_MAJOR = 3

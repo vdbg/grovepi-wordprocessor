@@ -3,16 +3,14 @@
 ## Background
 
 I wanted a stand-alone wordprocessor, similar to [this one](https://www.amazon.com/Alphasmart-NEO-AA-0410-10971-AQ-Neo-Handheld/dp/B007BHWRII), meaning a device that can only be used
-to type text, and absolutely nothing else (no notifications, no browser, no distractions). But I definitively wasn't willing to pay over $100 for a glorified keyboard.
-
-I also had an old [Raspberry Pi Model B](https://en.wikipedia.org/wiki/Raspberry_Pi) and an old [GrovePI](https://www.dexterindustries.com/grovepi/) kit, both taking dust for over a decade.
+to type text, and absolutely nothing else (no notifications, no browser, no distractions) and had an old [Raspberry Pi Model B](https://en.wikipedia.org/wiki/Raspberry_Pi) and [GrovePI](https://www.dexterindustries.com/grovepi/) kit, both taking dust for over a decade.
 
 Below is a description of the steps taken to make this project happen.
 
-## Hardware
+## Hardware used
 
 * A [Raspberry Pi](https://www.raspberrypi.com/). Tested on the 2012 model B, so should work on any regular Raspberry Pi (meaning Pico and Zero models excluded). 
-* A [Grove Pi](https://www.dexterindustries.com/grovepi/) kit. Especially the board and the LCD. It looks like it's discontinued but maybe it can be found on eBay.
+* A [Grove Pi](https://www.dexterindustries.com/grovepi/) kit. Especially the board and the LCD. It looks like it's discontinued but maybe it can be found on eBay. An alternative could be [Adafruit](https://www.adafruit.com/product/1115) but I don't have one.
 * A keyboard. 
 
 ## Installation
@@ -21,8 +19,8 @@ Below is a description of the steps taken to make this project happen.
 
 * Attach the GrovePi board on the Raspberry Pi and the LCD screen in port I2C-2 on the board
 * Install **buster** on the Raspberry. Not bullseye or later.
-  * Bullseye or later will **[not work](https://forum.dexterindustries.com/t/grove-pi-doesnt-work-do-not-use-raspbian-bullseye/8664)** with the GrovePi kit. Wasted a day here.
-  * Buster can be downloadesd from [here](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-legacy).
+  * Bullseye or later will **[not work](https://forum.dexterindustries.com/t/grove-pi-doesnt-work-do-not-use-raspbian-bullseye/8664)** with the GrovePi kit.
+  * Buster can be downloaded from [here](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-legacy).
   * The lite version (no desktop) is recommended since the whole point of the wordprocessor is to only display on an LCD screen.
 * Run `sudo raspi-config` to set the pi user to Console AutoLogin using (under System Options, Boot / Auto login)
 * Install [GrovePi](https://github.com/DexterInd/GrovePi). The below incantation (that bypasses the UI components) is recommended:
@@ -62,10 +60,5 @@ fi
 ```
 * If logged on the console (physical monitor), press 'Ctrl-D'. This should automatically start the word processor. Now that the default tty1 console is "taken" by the word processor, you have to use CTRL+ALT+Function_Key (F1-F7) to use the other consoles.
 * If logged through ssh instead, then `ps auwx  | grep bash` and kill the bash process on tty1. The wordprocessor should automatically start.
-* Now, whenever the keyboard physically attached to the pi is used (possibly through bluetooth), the LCD screen should show what's typed
+* Now, whenever the keyboard physically attached to the pi is used (possibly through bluetooth), the LCD screen should show what's typed.
 
-
-
-
-
-   
